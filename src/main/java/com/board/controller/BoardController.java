@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.board.domain.BoardVO;
 import com.board.domain.Page;
+import com.board.domain.ReplyVO;
 import com.board.service.BoardService;
+import com.board.service.ReplyService;
 
 @Controller
 @RequestMapping("/board/*")
@@ -21,6 +23,9 @@ public class BoardController {
 	@Inject
 	private BoardService service;
 
+	@Inject
+	private ReplyService replyService;
+	
 	// 게시물 목록
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public void getList(Model model) throws Exception {
@@ -51,6 +56,13 @@ public class BoardController {
 		BoardVO vo = service.view(bno);
 		
 		model.addAttribute("view", vo);
+		
+		// 댓글 조회
+		
+		List<ReplyVO> reply = null;
+		reply = replyService.list(bno);
+		model.addAttribute("reply", reply);
+		
 	}
 	
 	// 게시물 수정
@@ -162,8 +174,9 @@ public class BoardController {
 		Page page = new Page();
 		
 		page.setNum(num);
-		page.setCount(service.count());  
-
+		//page.setCount(service.count());  
+		page.setCount(service.searchCount(searchType, keyword));
+		
 		List<BoardVO> list = null; 
 		list = service.listPageSearch(page.getDisplayPost(), page.getPostNum(), searchType, keyword);
 
@@ -173,10 +186,18 @@ public class BoardController {
 		model.addAttribute("startPageNum", page.getStartPageNum());
 		model.addAttribute("endPageNum", page.getEndPageNum());
 		 
-		 model.addAttribute("prev", page.getPrev());
+		model.addAttribute("prev", page.getPrev());
 		model.addAttribute("next", page.getNext());  
-
 		model.addAttribute("select", num);
+		
+		// 검색 타입과 검색어
+		page.setSearchType(searchType);
+		page.setKeyword(keyword);
+		
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("searchTypeKeyword", page.getSearchTypeKeyword());
+
 	}
 	
 	

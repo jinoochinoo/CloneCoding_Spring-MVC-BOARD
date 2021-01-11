@@ -29,6 +29,11 @@ public class Page {
 	private boolean prev;
 	private boolean next;
 	
+	// 검색 조건
+	private String searchType;
+	private String keyword; 
+	
+	
 	public void setNum(int num) {
 		 this.num = num;
 		}
@@ -76,6 +81,24 @@ public class Page {
 		public boolean getNext() {
 		 return next;
 		}
+		
+		public void setSearchType(String searchType) {
+			 this.searchType = searchType;  
+			}
+
+			public String getSearchType() {
+			 return searchType;
+			} 
+
+			public void setKeyword(String keyword) {
+			 this.keyword = keyword;  
+			} 
+
+			public String getKeyword() {
+			 return keyword;
+			}
+		
+		// 페이징 계산
 		private void dataCalc() {
 			 
 			 // 마지막 번호
@@ -97,4 +120,15 @@ public class Page {
 			 displayPost = (num - 1) * postNum;
 			 
 			}
+		
+		// 검색 타입과 검색어
+		public String getSearchTypeKeyword() {
+			 
+			 if(searchType.equals("") || keyword.equals("")) {
+			  return ""; 
+			 } else {
+			  return "&searchType=" + searchType + "&keyword=" + keyword; 
+			 }
+			}
+		
 }
